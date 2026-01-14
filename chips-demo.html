@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Chips Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Inter:wght@600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="chips.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f2b0f 0%, #1a4d1a 50%, #0f2b0f 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #f4e4c1;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: #d4af37;
+            margin-bottom: 60px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .chip-row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chip-label {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #ffd700;
+            margin: 40px 0 30px;
+            font-weight: 700;
+        }
+
+        .pot-demo {
+            position: relative;
+            width: 600px;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid #d4af37;
+            border-radius: 20px;
+            margin: 30px auto;
+        }
+
+        .chip-info {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 600px;
+            margin-top: 40px;
+        }
+
+        .chip-info h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .chip-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .chip-info li {
+            margin: 10px 0;
+            color: #f4e4c1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>♠️ Realistic Poker Chips ♥️</h1>
+
+    <div class="section-title">All Chip Denominations</div>
+
+    <div class="chip-row">
+        <div>
+            <div class="poker-chip chip-5">
+                <span class="value">5</span>
+            </div>
+            <div class="chip-label">$5 White</div>
+        </div>
+
+        <div>
+            <div class="poker-chip chip-10">
+                <span class="value">10</span>
+            </div>
+            <div class="chip-label">$10 Red</div>
+        </div>
+
+        <div>
+            <div class="poker-chip chip-20">
+                <span class="value">20</span>
+            </div>
+            <div class="chip-label">$20 Green</div>
+        </div>
+
+        <div>
+            <div class="poker-chip chip-50">
+                <span class="value">50</span>
+            </div>
+            <div class="chip-label">$50 Blue</div>
+        </div>
+
+        <div>
+            <div class="poker-chip chip-100">
+                <span class="value">100</span>
+            </div>
+            <div class="chip-label">$100 Black</div>
+        </div>
+    </div>
+
+    <div class="section-title">Different Sizes</div>
+
+    <div class="chip-row">
+        <div>
+            <div class="poker-chip chip-20 small">
+                <span class="value">20</span>
+            </div>
+            <div class="chip-label">Small</div>
+        </div>
+
+        <div>
+            <div class="poker-chip chip-50">
+                <span class="value">50</span>
+            </div>
+            <div class="chip-label">Regular</div>
+        </div>
+
+        <div>
+            <div class="poker-chip chip-100 large">
+                <span class="value">100</span>
+            </div>
+            <div class="chip-label">Large</div>
+        </div>
+    </div>
+
+    <div class="section-title">Scattered Pot Example</div>
+
+    <div class="pot-demo" id="pot-demo">
+        <!-- Chips will be dynamically added here -->
+    </div>
+
+    <div class="chip-info">
+        <h3>✨ Features</h3>
+        <ul>
+            <li>✓ Realistic casino-style poker chips</li>
+            <li>✓ Dotted edge patterns matching real chips</li>
+            <li>✓ 3D appearance with radial gradients</li>
+            <li>✓ Proper colors: White ($5), Red ($10), Green ($20), Blue ($50), Black ($100)</li>
+            <li>✓ Built entirely with CSS - no images required</li>
+            <li>✓ Smooth animations for scattering and flying effects</li>
+        </ul>
+    </div>
+
+    <script>
+        // Demonstrate scattered chips in pot
+        const potDemo = document.getElementById('pot-demo');
+        const chipTypes = [
+            { value: 100, className: 'chip-100' },
+            { value: 100, className: 'chip-100' },
+            { value: 50, className: 'chip-50' },
+            { value: 50, className: 'chip-50' },
+            { value: 20, className: 'chip-20' },
+            { value: 20, className: 'chip-20' },
+            { value: 10, className: 'chip-10' },
+            { value: 10, className: 'chip-10' },
+            { value: 5, className: 'chip-5' }
+        ];
+
+        chipTypes.forEach((chipType, index) => {
+            const chip = document.createElement('div');
+            chip.className = `poker-chip scattered-chip ${chipType.className}`;
+            chip.innerHTML = `<span class="value">${chipType.value}</span>`;
+
+            // Random positioning
+            const angle = (index * 40 + Math.random() * 30) * (Math.PI / 180);
+            const distance = 40 + Math.random() * 60;
+            const x = 50 + Math.cos(angle) * distance;
+            const y = 50 + Math.sin(angle) * distance;
+
+            chip.style.left = `${x}%`;
+            chip.style.top = `${y}%`;
+            chip.style.setProperty('--rotate', `${Math.random() * 360}deg`);
+            chip.style.animationDelay = `${index * 0.08}s`;
+            chip.style.transform = `translate(-50%, -50%)`;
+
+            potDemo.appendChild(chip);
+        });
+    </script>
+</body>
+
+</html>
