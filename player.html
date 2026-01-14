@@ -3,477 +3,746 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Poker - Player</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles/variables.css">
-    <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="chips.css">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Poker Player VIP</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: var(--font-body);
-            background: linear-gradient(135deg, var(--color-felt-dark) 0%, var(--color-felt-base) 50%, var(--color-felt-dark) 100%);
-            min-height: 100vh;
-            color: var(--color-text-primary);
+            margin: 0;
+            background: #1a3a2e;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, .05) 2px, rgba(0, 0, 0, .05) 4px),
+                repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0, 0, 0, .05) 2px, rgba(0, 0, 0, .05) 4px),
+                linear-gradient(180deg, #1a5a3a 0%, #0d2818 100%);
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             position: relative;
-            overflow-x: hidden;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            transition: box-shadow 0.3s ease;
         }
 
-        /* Felt texture */
+        /* Safe area support for notch devices */
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* TURN GLOW ANIMATION */
+        body.my-turn {
+            box-shadow: inset 0 0 0 6px #2ecc71;
+        }
+
+        /* Felt Texture Overlay */
         body::before {
             content: '';
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background:
-                repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0, 0, 0, 0.03) 2px,
-                    rgba(0, 0, 0, 0.03) 4px);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
             pointer-events: none;
-            opacity: 0.5;
-            z-index: var(--z-below);
         }
 
-        /* Setup Screen */
-        #setup-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: var(--space-5);
-            position: relative;
-            z-index: var(--z-raised);
-        }
-
-        .setup-card {
-            max-width: 450px;
-            width: 100%;
-        }
-
-        .setup-card h2 {
-            color: var(--color-gold-base);
-            text-align: center;
-            margin-bottom: var(--space-6);
-            font-size: var(--text-3xl);
-        }
-
-        .form-group {
-            margin-bottom: var(--space-5);
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: var(--space-2);
-            color: var(--color-gold-light);
-            font-weight: var(--font-semibold);
-            font-size: var(--text-sm);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Game Screen */
-        #game-screen {
-            display: none;
-            min-height: 100vh;
-            position: relative;
-            z-index: var(--z-raised);
-            padding-bottom: 220px;
-        }
-
-        .game-screen.my-turn {
-            animation: greenGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes greenGlow {
-
-            0%,
-            100% {
-                box-shadow: inset 0 0 50px rgba(45, 143, 45, 0.3);
-            }
-
-            50% {
-                box-shadow: inset 0 0 80px rgba(92, 184, 92, 0.6);
-            }
-        }
-
-        /* Player Info */
-        .player-info {
-            margin: var(--space-5);
-        }
-
-        .player-name {
-            font-family: var(--font-display);
-            color: var(--color-gold-base);
-            font-size: var(--text-4xl);
-            margin-bottom: var(--space-3);
-            font-weight: var(--font-black);
-            letter-spacing: 0.02em;
-            text-align: center;
-        }
-
-        .player-stats {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-6);
-            margin-bottom: var(--space-3);
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: var(--text-xs);
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: var(--space-1);
-        }
-
-        .stat-value {
-            font-size: var(--text-3xl);
-            font-weight: var(--font-bold);
-        }
-
-        .stat-value.chips {
-            color: var(--color-success);
-        }
-
-        .stat-value.bet {
-            color: var(--color-danger);
-        }
-
-        /* Staging Area */
-        .staging-area {
-            margin: var(--space-5);
-        }
-
-        .staging-header {
-            text-align: center;
-            margin-bottom: var(--space-4);
-        }
-
-        .staging-label {
-            color: var(--color-gold-light);
-            font-size: var(--text-sm);
-            font-weight: var(--font-semibold);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: var(--space-2);
-        }
-
-        .staged-amount {
-            color: var(--color-gold-base);
-            font-size: var(--text-5xl);
-            font-weight: var(--font-black);
-            text-shadow: 0 0 15px var(--color-gold-glow);
-        }
-
-        .staged-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-3);
-            justify-content: center;
-            min-height: 80px;
-            padding: var(--space-4);
-        }
-
-        .staged-chip {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 4px solid;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: var(--font-bold);
-            font-size: var(--text-base);
-            color: var(--color-white);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            box-shadow: var(--shadow-md);
-            animation: chipAppear var(--transition-bounce);
-        }
-
-        @keyframes chipAppear {
-            from {
-                transform: scale(0) rotate(0deg);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1) rotate(360deg);
-                opacity: 1;
-            }
-        }
-
-        /* Action Container */
-        .action-container {
-            padding: var(--space-5);
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-4);
-            align-items: center;
-        }
-
-        .action-btn {
-            width: 90%;
-            max-width: 400px;
-            padding: var(--space-6);
-            font-size: var(--text-2xl);
-            font-weight: var(--font-bold);
-            border: none;
-            border-radius: var(--radius-xl);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .action-btn::before {
-            content: '';
+        /* Wood Rail */
+        .wood-rail {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width var(--transition-slow), height var(--transition-slow);
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(180deg, #4a2511 0%, #2d1507 100%);
+            border-top: 2px solid #654321;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
 
-        .action-btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .action-btn.btn-check {
-            background: linear-gradient(135deg, var(--color-info-dark) 0%, var(--color-info) 100%);
-            color: white;
-            box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .action-btn.btn-call {
-            background: linear-gradient(135deg, var(--color-warning-dark) 0%, var(--color-warning) 100%);
-            color: var(--color-gray-900);
-            box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .action-btn.btn-raise {
-            background: linear-gradient(135deg, var(--color-danger-dark) 0%, var(--color-danger) 100%);
-            color: white;
-            box-shadow: var(--shadow-lg), var(--shadow-glow-red);
+        /* HEADER */
+        .header {
+            height: 70px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 100;
         }
 
         .btn-fold {
-            background: linear-gradient(135deg, var(--color-gray-700) 0%, var(--color-gray-600) 100%);
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
             color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-fold:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.4);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        #disp-name {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        /* TURN WAITING OVERLAY */
+        #turn-waiting-overlay {
+            display: flex;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 850;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+            transition: opacity 0.3s;
+        }
+
+        .waiting-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .waiting-name {
+            color: #ffd700;
+            font-size: 40px;
+            margin-top: 10px;
+            animation: pulseText 1.5s infinite;
+        }
+
+        @keyframes pulseText {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(0.98);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        /* FOLD OVERLAY */
+        #folded-overlay {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 900;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .folded-text {
+            font-size: 60px;
+            color: #e74c3c;
+            font-weight: bold;
+            letter-spacing: 10px;
+            border: 5px solid #e74c3c;
+            padding: 20px 60px;
+            transform: rotate(-15deg);
+            margin-bottom: 30px;
+            font-family: 'Bebas Neue', sans-serif;
+            text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+            animation: foldPulse 2s infinite;
+        }
+
+        @keyframes foldPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .btn-unfold {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #777;
+            color: #aaa;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        /* MIDDLE AREA */
+        .middle-stage {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+            padding-bottom: 0;
+        }
+
+        .balance-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .balance-val {
+            font-size: 48px;
+            color: #2ecc71;
+            font-weight: bold;
+            font-family: 'Bebas Neue', sans-serif;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .balance-val.low {
+            color: #e74c3c;
+            animation: lowChipsWarning 1s infinite;
+        }
+
+        @keyframes lowChipsWarning {
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
+            }
+
+            50% {
+                text-shadow: 0 0 30px rgba(231, 76, 60, 1);
+            }
+        }
+
+        /* STAGING BOX */
+        .staging-box {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px 40px;
+            text-align: center;
+            min-width: 280px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .staging-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .staged-total {
+            font-size: 56px;
+            color: #ffd700;
+            font-weight: bold;
+            font-family: 'Bebas Neue', sans-serif;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8),
+                0 4px 8px rgba(0, 0, 0, 0.5);
+            margin: 10px 0;
+            letter-spacing: 4px;
+        }
+
+        /* ACTION BUTTONS */
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quick-bets {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .btn-quick {
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.5);
+            color: #3498db;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-quick:active {
+            background: rgba(52, 152, 219, 0.4);
+            transform: scale(0.95);
+        }
+
+        /* MAIN ACTION BUTTON (Smart Check/Call/Bet) */
+        .btn-main-action {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4),
+                inset 0 -3px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+            min-width: 140px;
+        }
+
+        .btn-main-action:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-main-action.check-mode {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4), inset 0 -3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-main-action.call-mode {
+            background: linear-gradient(145deg, #f39c12, #d35400);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4), inset 0 -3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-allin {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: #ffd700;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            display: block;
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4),
+                inset 0 -3px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
         }
 
         .btn-clear {
-            background: linear-gradient(135deg, var(--color-gray-600) 0%, var(--color-gray-500) 100%);
-            color: white;
-            padding: var(--space-4);
-            font-size: var(--text-lg);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        /* Chip Dock */
+        /* CHIPS - 3D REALISTIC */
         .chip-dock {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border-top: 1px solid var(--glass-border);
-            padding: var(--space-4) var(--space-2);
-            padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+            min-height: 140px;
+            padding-bottom: 20px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%);
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
-            gap: var(--space-2);
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
-            z-index: var(--z-overlay);
+            gap: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 50;
+            flex-wrap: wrap;
+            padding-top: 15px;
         }
 
-        .poker-chip {
-            transition: all var(--transition-base);
-        }
-
-        .poker-chip:active {
-            transform: scale(0.9);
-        }
-
-        /* Waiting Overlay */
-        .waiting-overlay {
-            display: none;
-        }
-
-        .waiting-overlay.active {
+        .chip {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        /* Edge spots (dashed border effect) */
+        .chip::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+            background: repeating-conic-gradient(from 0deg,
+                    currentColor 0deg 20deg,
+                    transparent 20deg 40deg);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .chip:active {
+            transform: scale(0.9) translateY(3px);
+        }
+
+        .chip:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        /* Chips Colors */
+        .c1 {
+            background: radial-gradient(circle at 30% 30%, #ffffff, #e8e8e8 60%, #c0c0c0);
+            color: #333;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .c5 {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #e74c3c 60%, #c0392b);
+            color: white;
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .c25 {
+            background: radial-gradient(circle at 30% 30%, #2ecc71, #27ae60 60%, #229954);
+            color: white;
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .c100 {
+            background: radial-gradient(circle at 30% 30%, #34495e, #2c3e50 60%, #1a252f);
+            color: #ffd700;
+            box-shadow: 0 6px 20px rgba(52, 73, 94, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* LOGIN SCREEN */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-title {
+            color: #ffd700;
+            font-size: 64px;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 8px;
+            margin-bottom: 50px;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+        }
+
+        .login-input {
+            padding: 18px 30px;
+            font-size: 22px;
+            text-align: center;
+            margin: 12px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-btn {
+            padding: 18px 60px;
+            font-size: 24px;
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            margin-top: 30px;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 3px;
+            box-shadow: 0 6px 25px rgba(46, 204, 113, 0.5);
+            transition: all 0.2s;
+        }
+
+        /* INFO BADGE */
+        .info-badge {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* FLYING CHIP ANIMATION */
+        .flying-chip {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+            animation: flyToPot 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes flyToPot {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.3) rotate(180deg);
+            }
+
+            100% {
+                transform: scale(0.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* SCREEN FLASH */
+        .screen-flash {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(8px);
-            z-index: var(--z-modal);
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            background: white;
+            pointer-events: none;
+            z-index: 9998;
+            animation: flash 0.3s;
         }
 
-        .waiting-message {
-            text-align: center;
-            padding: var(--space-5);
-        }
-
-        .waiting-message h2 {
-            color: var(--color-gold-base);
-            font-size: var(--text-4xl);
-            margin-bottom: var(--space-5);
-        }
-
-        .waiting-player {
-            color: var(--color-success);
-            font-size: var(--text-5xl);
-            font-weight: var(--font-black);
-            text-shadow: 0 0 20px var(--color-success-glow);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
+        @keyframes flash {
 
             0%,
             100% {
-                opacity: 0.6;
-                transform: scale(1);
+                opacity: 0;
             }
 
             50% {
-                opacity: 1;
-                transform: scale(1.1);
+                opacity: 0.5;
             }
         }
 
-        @media (max-width: 400px) {
-            .poker-chip {
-                width: 60px;
-                height: 60px;
+        /* BET HISTORY */
+        .bet-history {
+            position: absolute;
+            top: 80px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #aaa;
+            max-width: 150px;
+            backdrop-filter: blur(10px);
+        }
+
+        .bet-history-item {
+            padding: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bet-history-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Mobile adjustments */
+        @media (max-height: 700px) {
+            .balance-val {
+                font-size: 36px;
             }
 
-            .poker-chip .value {
-                font-size: 1.1rem;
+            .staged-total {
+                font-size: 42px;
+            }
+
+            .chip {
+                width: 60px;
+                height: 60px;
+                font-size: 16px;
+            }
+
+            .chip-dock {
+                min-height: 120px;
+                gap: 15px;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Setup Screen -->
-    <div id="setup-screen">
-        <div class="glass-card setup-card">
-            <h2>📱 JOIN TABLE</h2>
-            <div class="form-group">
-                <label for="room-code">Room Code</label>
-                <input type="text" id="room-code" class="input" placeholder="Enter room code" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" class="input" placeholder="Enter password" required>
-            </div>
-            <div class="form-group">
-                <label for="player-name">Your Name</label>
-                <input type="text" id="player-name" class="input" placeholder="Enter your name" required>
-            </div>
-            <button class="btn btn--primary btn--lg" onclick="joinGame()">JOIN GAME</button>
-        </div>
+
+    <div class="wood-rail"></div>
+
+    <div id="login-screen">
+        <div class="login-title">POKER VIP</div>
+        <input id="room" class="login-input" placeholder="Room Code" autocomplete="off">
+        <input id="pass" class="login-input" placeholder="Password" autocomplete="off">
+        <input id="name" class="login-input" placeholder="Player Name" autocomplete="off">
+        <button class="login-btn" onclick="joinGame()">ENTER TABLE</button>
     </div>
 
-    <!-- Game Screen -->
-    <div id="game-screen">
-        <!-- Waiting Overlay -->
-        <div class="waiting-overlay" id="waiting-overlay">
-            <div class="waiting-message">
-                <h2>⏳ WAITING FOR</h2>
-                <div class="waiting-player" id="waiting-player-name">...</div>
+    <!-- NEW: WAITING OVERLAY -->
+    <div id="turn-waiting-overlay">
+        <div class="waiting-text">WAITING FOR ACTION</div>
+        <div class="waiting-name" id="waiting-for-name">...</div>
+    </div>
+
+    <div id="folded-overlay">
+        <div class="folded-text">FOLDED</div>
+        <button class="btn-unfold" onclick="unfold()">Undo Fold</button>
+    </div>
+
+    <div id="app-interface" style="display:none; height:100%; flex-direction:column;">
+        <div class="header">
+            <button class="btn-fold" onclick="foldHand()">✖ FOLD</button>
+            <div class="player-info">
+                <div class="player-avatar" id="avatar">🃏</div>
+                <div id="disp-name">PLAYER</div>
             </div>
         </div>
 
-        <!-- Player Info -->
-        <div class="player-info glass-card">
-            <div class="player-name" id="my-name">Player</div>
-            <div class="player-stats">
-                <div class="stat">
-                    <div class="stat-label">Chips</div>
-                    <div class="stat-value chips">💵 $<span id="my-chips">1000</span></div>
+        <div class="middle-stage">
+            <div class="info-badge" id="call-info">TABLE: $0</div>
+
+            <div class="bet-history" id="bet-history" style="display:none;">
+                <div style="font-weight:bold; margin-bottom:5px;">LAST BETS:</div>
+            </div>
+
+            <div class="balance-container">
+                <div class="balance-label">WALLET</div>
+                <div class="balance-val" id="disp-bal">$1000</div>
+            </div>
+
+            <div class="staging-box">
+                <div class="staging-label">STAGED</div>
+                <div class="staged-total" id="staged-val">$0</div>
+
+                <div id="quick-bets" class="quick-bets" style="display:none;">
+                    <button class="btn-quick" onclick="quickBet('half')">½ POT</button>
+                    <button class="btn-quick" onclick="quickBet('pot')">POT</button>
+                    <button class="btn-quick" onclick="quickBet('2x')">2× POT</button>
                 </div>
-                <div class="stat">
-                    <div class="stat-label">Current Bet</div>
-                    <div class="stat-value bet">$<span id="my-bet">0</span></div>
+
+                <div class="action-row">
+                    <!-- Dynamic Main Button -->
+                    <button class="btn-main-action check-mode" id="btn-smart" onclick="smartAction()">CHECK</button>
+                    <button class="btn-clear" onclick="clearStage()">CLEAR</button>
                 </div>
+
+                <button class="btn-allin" id="btn-allin" onclick="goAllIn()">♠️ ALL IN ♠️</button>
             </div>
         </div>
 
-        <!-- Staging Area -->
-        <div class="staging-area glass-card">
-            <div class="staging-header">
-                <div class="staging-label">💰 Staging Area</div>
-                <div class="staged-amount">$<span id="staged-value">0</span></div>
-            </div>
-            <div class="staged-chips" id="staged-chips"></div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-container">
-            <button class="action-btn" id="main-action-btn" onclick="executeAction()">CHECK</button>
-            <button class="action-btn btn-fold" onclick="fold()">❌ FOLD</button>
-            <button class="action-btn btn-clear" onclick="clearStaging()">🔄 CLEAR STAGING</button>
-        </div>
-
-        <!-- Chip Dock -->
         <div class="chip-dock">
-            <div class="poker-chip chip-5" onclick="addChip(5)">
-                <span class="value">5</span>
-            </div>
-            <div class="poker-chip chip-10" onclick="addChip(10)">
-                <span class="value">10</span>
-            </div>
-            <div class="poker-chip chip-20" onclick="addChip(20)">
-                <span class="value">20</span>
-            </div>
-            <div class="poker-chip chip-50" onclick="addChip(50)">
-                <span class="value">50</span>
-            </div>
-            <div class="poker-chip chip-100" onclick="addChip(100)">
-                <span class="value">100</span>
-            </div>
+            <div class="chip c1" onclick="addChip(1)" oncontextmenu="return longPress(1)">1</div>
+            <div class="chip c5" onclick="addChip(5)" oncontextmenu="return longPress(5)">5</div>
+            <div class="chip c25" onclick="addChip(25)" oncontextmenu="return longPress(25)">25</div>
+            <div class="chip c100" onclick="addChip(100)" oncontextmenu="return longPress(100)">100</div>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-        import { getDatabase, ref, set, onValue, update, get } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, update, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyApDemI7Jtd76lOo1oPBmHneMb4mHCMxZs",
@@ -484,295 +753,404 @@
             messagingSenderId: "304292154404",
             appId: "1:304292154404:web:c1d94e60add9a8f0d75cb1"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let currentRoom = null;
-        let myName = null;
-        let gameState = null;
-        let myData = null;
+        let roomID = "";
+        let myName = "";
         let stagedAmount = 0;
-        let audioContext = null;
+        let currentBalance = 1000;
+        let myCurrentBet = 0;
+        let highestBet = 0;
+        let currentPot = 0;
+        let betHistory = [];
 
-        // Sound generation
-        function playSound(frequency, duration) {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            oscillator.frequency.value = frequency;
-            oscillator.type = 'sine';
-
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + duration);
-        }
-
-        function playTurnNotification() {
-            playSound(800, 0.1);
-            setTimeout(() => playSound(1000, 0.15), 100);
-        }
-
-        function playChipSound() {
-            playSound(600, 0.05);
-        }
-
-        window.joinGame = async function () {
-            const roomCode = document.getElementById('room-code').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const playerName = document.getElementById('player-name').value.trim();
-
-            if (!roomCode || !password || !playerName) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            // Verify room and password
-            const roomSnapshot = await get(ref(db, `rooms/${roomCode}`));
-            if (!roomSnapshot.exists()) {
-                alert('Room does not exist');
-                return;
-            }
-
-            const room = roomSnapshot.val();
-            if (room.password !== password) {
-                alert('Incorrect password');
-                return;
-            }
-
-            currentRoom = roomCode;
-            myName = playerName;
-
-            // Add player to room
-            await set(ref(db, `rooms/${roomCode}/players/${playerName}`), {
-                chips: 1000,
-                currentBet: 0,
-                folded: false,
-                joined: Date.now()
-            });
-
-            // Add to seats if not already there
-            const seats = room.seats || [];
-            if (!seats.includes(playerName)) {
-                seats.push(playerName);
-                await update(ref(db, `rooms/${roomCode}`), { seats });
-            }
-
-            // Listen to game state
-            onValue(ref(db, `rooms/${roomCode}`), (snapshot) => {
-                gameState = snapshot.val();
-                checkTurnStatus();
-            });
-
-            // Listen to my player data
-            onValue(ref(db, `rooms/${roomCode}/players/${playerName}`), (snapshot) => {
-                const data = snapshot.val();
-                if (!data) {
-                    alert('You have been removed from the game');
-                    location.reload();
-                    return;
-                }
-                myData = data;
-                updatePlayerUI();
-            });
-
-            document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'block';
-            document.getElementById('my-name').textContent = playerName;
-        };
-
-        function updatePlayerUI() {
-            if (!myData) return;
-
-            document.getElementById('my-chips').textContent = myData.chips || 0;
-            document.getElementById('my-bet').textContent = myData.currentBet || 0;
-        }
-
+        // NEW STATE VARS
         let isMyTurn = false;
+        let seatList = [];
+        let currentTurnIndex = 0;
 
-        function checkTurnStatus() {
-            if (!gameState || !myName) return;
+        // SOUNDS & HAPTICS
+        const sounds = {
+            chipClick: () => playBeep(800, 0.05),
+            chipSlide: () => playBeep([600, 400], 0.1),
+            chipWin: () => playBeep([523, 659, 784], 0.3),
+            fold: () => playBeep([400, 300, 200], 0.2),
+            allIn: () => playBeep([1000, 800, 600, 1200], 0.4),
+            myTurn: () => playBeep([600, 800, 1000], 0.3)
+        };
 
-            const seats = gameState.seats || [];
-            const currentPlayerIndex = gameState.turnIndex || 0;
-            const currentPlayer = seats[currentPlayerIndex];
+        function playBeep(frequencies, duration = 0.15) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (!Array.isArray(frequencies)) frequencies = [frequencies];
+            frequencies.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.frequency.value = freq;
+                osc.type = 'sine';
+                gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                osc.start(audioContext.currentTime + i * 0.05);
+                osc.stop(audioContext.currentTime + duration + i * 0.05);
+            });
+        }
 
-            const newIsMyTurn = currentPlayer === myName && !myData?.folded;
+        function vibrate(pattern) {
+            if ('vibrate' in navigator) navigator.vibrate(pattern);
+        }
 
-            if (newIsMyTurn && !isMyTurn) {
-                playTurnNotification();
-                if (navigator.vibrate) {
-                    navigator.vibrate([200, 100, 200]);
-                }
-                document.getElementById('game-screen').classList.add('my-turn');
-            } else if (!newIsMyTurn && isMyTurn) {
-                document.getElementById('game-screen').classList.remove('my-turn');
-            }
+        function screenFlash() {
+            const flash = document.createElement('div');
+            flash.className = 'screen-flash';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 300);
+        }
 
-            isMyTurn = newIsMyTurn;
+        function addBetToHistory(amount, action) {
+            betHistory.unshift({ amount, action, time: Date.now() });
+            if (betHistory.length > 3) betHistory.pop();
+            updateBetHistoryDisplay();
+        }
 
-            if (isMyTurn) {
-                document.getElementById('waiting-overlay').classList.remove('active');
-                updateActionButton();
-            } else {
-                document.getElementById('waiting-overlay').classList.add('active');
-                document.getElementById('waiting-player-name').textContent = currentPlayer || 'Unknown';
+        function updateBetHistoryDisplay() {
+            const container = document.getElementById('bet-history');
+            if (betHistory.length > 0) {
+                container.style.display = 'block';
+                container.innerHTML = '<div style="font-weight:bold; margin-bottom:5px;">LAST BETS:</div>';
+                betHistory.forEach(bet => {
+                    const item = document.createElement('div');
+                    item.className = 'bet-history-item';
+                    item.innerHTML = `<span style="color:#2ecc71;">$${bet.amount}</span> - ${bet.action}`;
+                    container.appendChild(item);
+                });
             }
         }
 
-        function updateActionButton() {
-            const btn = document.getElementById('main-action-btn');
+        window.joinGame = function () {
+            roomID = document.getElementById('room').value.trim().toUpperCase();
+            const pass = document.getElementById('pass').value.trim();
+            myName = document.getElementById('name').value.trim();
+            if (!roomID || !pass || !myName) return alert("Fill all fields");
 
-            // Calculate highest bet
-            let highestBet = 0;
-            if (gameState && gameState.seats) {
-                for (const playerName of gameState.seats) {
-                    const playerRef = ref(db, `rooms/${currentRoom}/players/${playerName}`);
-                    get(playerRef).then(snapshot => {
-                        const player = snapshot.val();
-                        if (player && player.currentBet > highestBet) {
-                            highestBet = player.currentBet;
-                        }
-                    });
+            get(ref(db, `games/${roomID}`)).then(snap => {
+                if (snap.exists() && String(snap.val().password) === pass) {
+                    initPlayer();
+                    sounds.chipWin();
+                } else {
+                    alert("Wrong Room or Password!");
+                    vibrate(200);
                 }
-            }
+            });
+        }
 
-            const myCurrentBet = myData?.currentBet || 0;
-            const totalBet = myCurrentBet + stagedAmount;
+        function initPlayer() {
+            const myRef = ref(db, `games/${roomID}/players/${myName}`);
+            get(myRef).then(snap => {
+                if (!snap.exists()) {
+                    update(myRef, { chips: 1000, currentBet: 0, status: 'active' });
+                } else {
+                    update(myRef, { status: 'active' });
+                }
 
-            if (stagedAmount === 0 && myCurrentBet === highestBet) {
-                btn.textContent = '✓ CHECK';
-                btn.className = 'action-btn btn-check';
-            } else if (totalBet < highestBet) {
-                const callAmount = highestBet - myCurrentBet;
-                btn.textContent = `💵 CALL $${callAmount}`;
-                btn.className = 'action-btn btn-call';
-            } else if (totalBet > highestBet) {
-                btn.textContent = `🔥 RAISE TO $${totalBet}`;
-                btn.className = 'action-btn btn-raise';
+                // Add to seats if not exists
+                get(ref(db, `games/${roomID}/seats`)).then(seatSnap => {
+                    let seats = seatSnap.val() || [];
+                    if (!seats.includes(myName)) {
+                        seats.push(myName);
+                        update(ref(db, `games/${roomID}`), { seats: seats });
+                    }
+                });
+            });
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-interface').style.display = 'flex';
+            document.getElementById('disp-name').innerText = myName;
+
+            const avatars = ['🃏', '♠️', '♥️', '♦️', '♣️', '🎰', '🎲', '👑'];
+            document.getElementById('avatar').innerText = avatars[Math.floor(Math.random() * avatars.length)];
+
+            // Listen to ME
+            onValue(myRef, (s) => {
+                const data = s.val();
+                if (data) {
+                    currentBalance = data.chips;
+                    myCurrentBet = data.currentBet || 0;
+                    document.getElementById('disp-bal').innerText = "$" + currentBalance;
+
+                    const balEl = document.getElementById('disp-bal');
+                    if (currentBalance < 100) balEl.classList.add('low');
+                    else balEl.classList.remove('low');
+
+                    const overlay = document.getElementById('folded-overlay');
+                    if (data.status === 'folded') overlay.style.display = 'flex';
+                    else overlay.style.display = 'none';
+
+                    updateSmartButton();
+                }
+            });
+
+            // Listen to ROOM
+            onValue(ref(db, `games/${roomID}`), (s) => {
+                const game = s.val();
+                if (game) {
+                    currentPot = game.pot || 0;
+                    if (currentPot > 0) document.getElementById('quick-bets').style.display = 'flex';
+                    else document.getElementById('quick-bets').style.display = 'none';
+
+                    if (game.players) {
+                        let max = 0;
+                        Object.values(game.players).forEach(p => {
+                            if ((p.currentBet || 0) > max) max = p.currentBet;
+                        });
+                        highestBet = max;
+                        updateSmartButton();
+                    }
+
+                    // TURN LOGIC
+                    seatList = game.seats || [];
+                    currentTurnIndex = game.turnIndex || 0;
+                    handleTurnDisplay();
+                }
+            });
+        }
+
+        function handleTurnDisplay() {
+            const activePlayer = seatList[currentTurnIndex];
+            const overlay = document.getElementById('turn-waiting-overlay');
+            const nameDisplay = document.getElementById('waiting-for-name');
+
+            if (activePlayer === myName) {
+                // IT IS MY TURN
+                if (!isMyTurn) {
+                    // Just became my turn
+                    isMyTurn = true;
+                    sounds.myTurn();
+                    vibrate([100, 50, 100, 50, 100]);
+                    document.body.classList.add('my-turn');
+                }
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 300); // Fade out
             } else {
-                btn.textContent = `💵 BET $${stagedAmount}`;
-                btn.className = 'action-btn btn-call';
+                // NOT MY TURN
+                isMyTurn = false;
+                document.body.classList.remove('my-turn');
+                overlay.style.display = 'flex';
+                setTimeout(() => overlay.style.opacity = '1', 10);
+                nameDisplay.innerText = activePlayer || "Starting...";
             }
         }
 
-        window.addChip = function (value) {
-            if (!isMyTurn) return;
+        // Logic for "Smart Button" (Check vs Call vs Raise)
+        function updateSmartButton() {
+            const btn = document.getElementById('btn-smart');
+            const diff = highestBet - myCurrentBet;
 
-            if (stagedAmount + value > (myData?.chips || 0)) {
-                alert('Not enough chips!');
+            // Update Table Info Badge
+            const infoBadge = document.getElementById('call-info');
+            infoBadge.innerText = `TABLE: $${highestBet}`;
+            if (diff > 0) infoBadge.style.color = '#e74c3c';
+            else infoBadge.style.color = '#ffd700';
+
+            // Determine Button State
+            if (stagedAmount === 0) {
+                if (diff === 0) {
+                    // CHECK
+                    btn.innerText = "CHECK";
+                    btn.className = "btn-main-action check-mode";
+                } else {
+                    // CALL
+                    btn.innerText = `CALL $${diff}`;
+                    btn.className = "btn-main-action call-mode";
+                }
+            } else {
+                // BET / RAISE
+                const total = myCurrentBet + stagedAmount;
+                if (total > highestBet) {
+                    btn.innerText = `RAISE TO $${total}`;
+                    btn.className = "btn-main-action"; // Green
+                } else if (total === highestBet) {
+                    btn.innerText = "CALL";
+                    btn.className = "btn-main-action call-mode";
+                } else {
+                    // Adding chips but not enough to call yet
+                    btn.innerText = `ADD $${diff - stagedAmount} MORE`;
+                    btn.className = "btn-main-action";
+                }
+            }
+        }
+
+        window.smartAction = function () {
+            if (!isMyTurn) return; // Should be blocked by overlay anyway
+
+            const diff = highestBet - myCurrentBet;
+
+            // Scenario 1: Auto-Fill Call
+            if (stagedAmount === 0 && diff > 0) {
+                if (diff > currentBalance) {
+                    // All in call
+                    stagedAmount = currentBalance;
+                } else {
+                    // Normal call
+                    stagedAmount = diff;
+                }
+                pushToPot(); // Execute immediately
                 return;
             }
 
-            stagedAmount += value;
-            document.getElementById('staged-value').textContent = stagedAmount;
-
-            // Add visual chip
-            const chipContainer = document.getElementById('staged-chips');
-            const chip = document.createElement('div');
-            chip.className = 'staged-chip';
-            chip.style.background = getChipColor(value);
-            chip.style.borderColor = getChipBorderColor(value);
-            chip.textContent = `$${value}`;
-            chipContainer.appendChild(chip);
-
-            playChipSound();
-            updateActionButton();
-        };
-
-        function getChipColor(value) {
-            if (value === 5) return 'radial-gradient(circle, #ffffff 0%, #e8e8e8 100%)';
-            if (value === 10) return 'radial-gradient(circle, #b33a3a 0%, #7a1f1f 100%)';
-            if (value === 20) return 'radial-gradient(circle, #4a7c4a 0%, #2d5a2d 100%)';
-            if (value === 50) return 'radial-gradient(circle, #4a6b8a 0%, #2d4a6b 100%)';
-            if (value === 100) return 'radial-gradient(circle, #3a3a3a 0%, #0a0a0a 100%)';
-            return '#fff';
+            // Scenario 2: Check or Bet/Raise
+            pushToPot();
         }
 
-        function getChipBorderColor(value) {
-            if (value === 5) return '#c0c0c0';
-            if (value === 10) return '#8b2020';
-            if (value === 20) return '#356535';
-            if (value === 50) return '#355575';
-            if (value === 100) return '#d4af37';
-            return '#000';
-        }
-
-        window.clearStaging = function () {
-            stagedAmount = 0;
-            document.getElementById('staged-value').textContent = 0;
-            document.getElementById('staged-chips').innerHTML = '';
-            updateActionButton();
-        };
-
-        window.executeAction = async function () {
-            if (!isMyTurn || stagedAmount < 0) return;
-
-            const newBet = (myData?.currentBet || 0) + stagedAmount;
-            const newChips = (myData?.chips || 0) - stagedAmount;
-
-            // Update player data
-            await update(ref(db, `rooms/${currentRoom}/players/${myName}`), {
-                currentBet: newBet,
-                chips: newChips
-            });
-
-            // Update pot
-            const newPot = (gameState.pot || 0) + stagedAmount;
-            await update(ref(db, `rooms/${currentRoom}`), {
-                pot: newPot
-            });
-
-            // Clear staging
-            clearStaging();
-
-            // Move to next player
-            await passTurn();
-        };
-
-        window.fold = async function () {
+        window.addChip = function (amt) {
             if (!isMyTurn) return;
 
-            if (!confirm('Are you sure you want to fold?')) return;
-
-            await update(ref(db, `rooms/${currentRoom}/players/${myName}`), {
-                folded: true
-            });
-
-            await passTurn();
-        };
-
-        async function passTurn() {
-            const seats = gameState.seats || [];
-            let nextIndex = (gameState.turnIndex + 1) % seats.length;
-
-            // Skip folded players
-            let attempts = 0;
-            while (attempts < seats.length) {
-                const nextPlayer = seats[nextIndex];
-                const playerSnapshot = await get(ref(db, `rooms/${currentRoom}/players/${nextPlayer}`));
-                const playerData = playerSnapshot.val();
-
-                if (playerData && !playerData.folded) {
-                    break;
-                }
-
-                nextIndex = (nextIndex + 1) % seats.length;
-                attempts++;
+            if (stagedAmount + amt > currentBalance) {
+                alert("Not enough chips! (Tap and hold for 10x)");
+                vibrate(200);
+                return;
             }
+            stagedAmount += amt;
+            document.getElementById('staged-val').innerText = "$" + stagedAmount;
+            updateSmartButton();
+            sounds.chipClick();
+            vibrate(30);
+        }
 
-            await update(ref(db, `rooms/${currentRoom}`), {
-                turnIndex: nextIndex
+        window.longPress = function (amt) {
+            if (!isMyTurn) return false;
+            const multiplied = amt * 10;
+            if (stagedAmount + multiplied > currentBalance) {
+                alert("Not enough chips for 10x!");
+                vibrate(200);
+            } else {
+                stagedAmount += multiplied;
+                document.getElementById('staged-val').innerText = "$" + stagedAmount;
+                updateSmartButton();
+                sounds.chipSlide();
+                vibrate([50, 30, 50]);
+            }
+            return false;
+        }
+
+        window.quickBet = function (type) {
+            if (!isMyTurn) return;
+            let amount = 0;
+            if (type === 'half') amount = Math.floor(currentPot / 2);
+            else if (type === 'pot') amount = currentPot;
+            else if (type === '2x') amount = currentPot * 2;
+
+            if (amount > currentBalance) amount = currentBalance;
+            stagedAmount = amount;
+            document.getElementById('staged-val').innerText = "$" + stagedAmount;
+            updateSmartButton();
+            sounds.chipSlide();
+            vibrate(50);
+        }
+
+        window.goAllIn = function () {
+            if (!isMyTurn) return;
+            if (confirm("GO ALL IN with $" + currentBalance + "?")) {
+                stagedAmount = currentBalance;
+                pushToPot();
+            }
+        }
+
+        window.clearStage = function () {
+            stagedAmount = 0;
+            document.getElementById('staged-val').innerText = "$0";
+            updateSmartButton();
+            vibrate(30);
+        }
+
+        function pushToPot() {
+            // Animation
+            if (stagedAmount > 0) createFlyingChip(stagedAmount);
+
+            get(ref(db, `games/${roomID}`)).then(snap => {
+                const game = snap.val();
+                const updates = {};
+                updates[`games/${roomID}/players/${myName}/chips`] = currentBalance - stagedAmount;
+                updates[`games/${roomID}/players/${myName}/currentBet`] = myCurrentBet + stagedAmount;
+                updates[`games/${roomID}/pot`] = (game.pot || 0) + stagedAmount;
+
+                // History
+                let actionText = "CHECK";
+                if (stagedAmount > 0) actionText = "BET";
+                if ((myCurrentBet + stagedAmount) === highestBet && stagedAmount > 0) actionText = "CALL";
+                if (stagedAmount >= currentBalance) actionText = "ALL IN";
+
+                addBetToHistory(stagedAmount, actionText);
+                sounds.chipSlide();
+                vibrate([50, 30]);
+
+                // Reset Local Stage
+                stagedAmount = 0;
+                document.getElementById('staged-val').innerText = "$0";
+
+                // PASS TURN
+                update(ref(db), updates).then(() => {
+                    passTurn(game);
+                });
             });
+        }
+
+        function createFlyingChip(amount) {
+            const chip = document.createElement('div');
+            chip.className = 'flying-chip';
+            if (amount >= 100) chip.style.background = 'radial-gradient(circle, #34495e, #2c3e50)';
+            else if (amount >= 25) chip.style.background = 'radial-gradient(circle, #2ecc71, #27ae60)';
+            else if (amount >= 5) chip.style.background = 'radial-gradient(circle, #e74c3c, #c0392b)';
+            else chip.style.background = 'radial-gradient(circle, #ffffff, #e8e8e8)';
+            chip.style.left = '50%';
+            chip.style.bottom = '180px';
+            chip.style.boxShadow = '0 4px 15px rgba(0,0,0,0.5)';
+            document.body.appendChild(chip);
+            setTimeout(() => chip.remove(), 600);
+        }
+
+        window.foldHand = function () {
+            if (!isMyTurn) return;
+            if (confirm("Fold this hand?")) {
+                get(ref(db, `games/${roomID}`)).then(snap => {
+                    const game = snap.val();
+                    update(ref(db, `games/${roomID}/players/${myName}`), { status: 'folded' })
+                        .then(() => {
+                            sounds.fold();
+                            vibrate([100, 50, 100]);
+                            addBetToHistory(0, 'FOLD');
+                            passTurn(game);
+                        });
+                });
+            }
+        }
+
+        window.unfold = function () {
+            update(ref(db, `games/${roomID}/players/${myName}`), { status: 'active' });
+            vibrate(50);
+        }
+
+        function passTurn(game) {
+            // Find next eligible player
+            let nextIndex = (currentTurnIndex + 1) % seatList.length;
+            let loopCount = 0;
+
+            // Recursive check to skip folded players
+            const findNext = (idx) => {
+                const pName = seatList[idx];
+                const pData = game.players[pName];
+                // Check if player exists and is active
+                if (pData && pData.status !== 'folded') {
+                    return idx;
+                }
+                if (loopCount > seatList.length) return idx; // Safety break
+                loopCount++;
+                return findNext((idx + 1) % seatList.length);
+            };
+
+            const actualNextIndex = findNext(nextIndex);
+            update(ref(db, `games/${roomID}`), { turnIndex: actualNextIndex });
         }
     </script>
 </body>
