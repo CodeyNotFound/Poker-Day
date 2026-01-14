@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Poker VIP - Host Table</title>
+    <title>Poker - Host</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="chips.css">
     <style>
         * {
             margin: 0;
@@ -13,8 +19,8 @@
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(135deg, #1a3a1a 0%, #0d1f0d 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f2b0f 0%, #1a4d1a 50%, #0f2b0f 100%);
             min-height: 100vh;
             color: #f4e4c1;
             position: relative;
@@ -178,9 +184,12 @@
         }
 
         .game-header h1 {
-            color: #ffd700;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: #d4af37;
+            font-size: 3rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.05em;
         }
 
         .room-info {
@@ -211,45 +220,27 @@
         }
 
         .pot-display h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
             color: #d4af37;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             margin-bottom: 10px;
+            letter-spacing: 0.1em;
         }
 
         .pot-amount {
+            font-family: 'Playfair Display', serif;
             color: #ffd700;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
         }
 
         .chip-pile {
             position: relative;
-            height: 150px;
-            margin: 20px auto;
-        }
-
-        .stack-chip {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 4px solid;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-            transition: all 0.5s ease;
-            animation: chipDrop 0.5s ease-out;
-        }
-
-        @keyframes chipDrop {
-            from {
-                transform: translateY(-100px) scale(0);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
+            height: 180px;
+            margin: 30px auto;
+            max-width: 600px;
         }
 
         /* Player Grid */
@@ -571,7 +562,7 @@
     <!-- Game Screen -->
     <div id="game-screen">
         <div class="game-header">
-            <h1>🎰 POKER VIP TABLE 🎰</h1>
+            <h1>♠️ POKER ♥️</h1>
             <div class="room-info">
                 <strong>Room:</strong> <span id="room-display"></span> |
                 <strong>Players:</strong> <span id="player-count">0</span>
@@ -684,21 +675,41 @@
 
             if (potAmount === 0) return;
 
-            const chipCount = Math.min(Math.floor(potAmount / 10), 20);
-            const colors = ['#dc143c', '#3498db', '#2d8f2d', '#ffd700', '#9b59b6'];
+            // Calculate how many chips to show (realistic numbers)
+            const chipTypes = [
+                { value: 100, className: 'chip-100', count: Math.floor(potAmount / 100) },
+                { value: 50, className: 'chip-50', count: Math.floor((potAmount % 100) / 50) },
+                { value: 20, className: 'chip-20', count: Math.floor((potAmount % 50) / 20) },
+                { value: 10, className: 'chip-10', count: Math.floor((potAmount % 20) / 10) },
+                { value: 5, className: 'chip-5', count: Math.floor((potAmount % 10) / 5) }
+            ];
 
-            for (let i = 0; i < chipCount; i++) {
-                const chip = document.createElement('div');
-                chip.className = 'stack-chip';
-                const color = colors[i % colors.length];
-                chip.style.background = color;
-                chip.style.borderColor = adjustBrightness(color, -30);
-                chip.style.left = `${40 + Math.random() * 20}%`;
-                chip.style.top = `${50 + Math.random() * 40}px`;
-                chip.style.transform = `rotate(${Math.random() * 360}deg)`;
-                chip.style.animationDelay = `${i * 0.05}s`;
-                chipPile.appendChild(chip);
-            }
+            let chipCount = 0;
+            chipTypes.forEach(chipType => {
+                const count = Math.min(chipType.count, 5); // Max 5 of each type for visual clarity
+                for (let i = 0; i < count; i++) {
+                    const chip = document.createElement('div');
+                    chip.className = `poker-chip scattered-chip ${chipType.className}`;
+                    chip.innerHTML = '<span class="value">' + chipType.value + '</span>';
+
+                    // Random positioning
+                    const angle = (chipCount * 45 + Math.random() * 30) * (Math.PI / 180);
+                    const distance = 30 + Math.random() * 80;
+                    const centerX = 50;
+                    const centerY = 50;
+                    const x = centerX + Math.cos(angle) * distance;
+                    const y = centerY + Math.sin(angle) * distance;
+
+                    chip.style.left = `${x}%`;
+                    chip.style.top = `${y}%`;
+                    chip.style.setProperty('--rotate', `${Math.random() * 360}deg`);
+                    chip.style.animationDelay = `${chipCount * 0.05}s`;
+                    chip.style.transform = `translate(-50%, -50%)`;
+
+                    chipPile.appendChild(chip);
+                    chipCount++;
+                }
+            });
         }
 
         function adjustBrightness(color, amount) {
