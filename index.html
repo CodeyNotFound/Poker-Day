@@ -1,278 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Poker</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles/variables.css">
-    <link rel="stylesheet" href="styles/components.css">
+    <title>Poker Night Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-body);
-            background: linear-gradient(135deg, var(--color-felt-dark) 0%, var(--color-felt-base) 50%, var(--color-felt-dark) 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text-primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Felt texture */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0, 0, 0, 0.05) 2px,
-                    rgba(0, 0, 0, 0.05) 4px),
-                repeating-linear-gradient(90deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0, 0, 0, 0.05) 2px,
-                    rgba(0, 0, 0, 0.05) 4px);
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        /* Wood border */
-        .wood-frame {
-            position: fixed;
-            pointer-events: none;
-            z-index: 100;
-        }
-
-        .wood-frame.top,
-        .wood-frame.bottom {
-            left: 0;
-            right: 0;
-            height: 35px;
-            background:
-                linear-gradient(90deg,
-                    #3d2817 0%,
-                    #5a3a20 20%,
-                    #6b4423 40%,
-                    #5a3a20 60%,
-                    #6b4423 80%,
-                    #3d2817 100%);
-            box-shadow:
-                inset 0 2px 6px rgba(255, 255, 255, 0.15),
-                inset 0 -2px 6px rgba(0, 0, 0, 0.5),
-                0 4px 12px rgba(0, 0, 0, 0.7);
-        }
-
-        .wood-frame.top {
-            top: 0;
-        }
-
-        .wood-frame.bottom {
-            bottom: 0;
-        }
-
-        .wood-frame.left,
-        .wood-frame.right {
-            top: 0;
-            bottom: 0;
-            width: 35px;
-            background:
-                linear-gradient(180deg,
-                    #3d2817 0%,
-                    #5a3a20 20%,
-                    #6b4423 40%,
-                    #5a3a20 60%,
-                    #6b4423 80%,
-                    #3d2817 100%);
-            box-shadow:
-                inset 2px 0 6px rgba(255, 255, 255, 0.15),
-                inset -2px 0 6px rgba(0, 0, 0, 0.5),
-                4px 0 12px rgba(0, 0, 0, 0.7);
-        }
-
-        .wood-frame.left {
-            left: 0;
-        }
-
-        .wood-frame.right {
-            right: 0;
-        }
-
-        .container {
+            background: #111;
+            color: white;
+            font-family: sans-serif;
             text-align: center;
-            z-index: 10;
-            padding: 60px 20px;
-        }
-
-        .logo {
-            margin-bottom: 30px;
-            font-size: 5rem;
-            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
-            animation: gentlePulse 3s ease-in-out infinite;
-        }
-
-        @keyframes gentlePulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.9;
-            }
-
-            50% {
-                transform: scale(1.03);
-                opacity: 1;
-            }
-        }
-
-        h1 {
-            font-family: var(--font-display);
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: var(--font-black);
-            margin-bottom: var(--space-16);
-            background: linear-gradient(135deg, var(--color-gold-base) 0%, var(--color-gold-light) 50%, var(--color-gold-base) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.08em;
-            position: relative;
-            filter: drop-shadow(3px 5px 8px rgba(0, 0, 0, 0.7));
-            animation: gentleFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes gentleFloat {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            align-items: center;
+            padding-top: 50px;
         }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-4);
-            padding: var(--space-6) var(--space-16);
-            font-family: var(--font-body);
-            font-size: var(--text-2xl);
-            font-weight: var(--font-bold);
+            display: block;
+            width: 80%;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 25px;
+            font-size: 20px;
+            font-weight: bold;
             text-decoration: none;
-            border-radius: var(--radius-xl);
-            transition: all var(--transition-base);
-            cursor: pointer;
-            border: none;
-            min-width: 340px;
-            box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            border-radius: 10px;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                    transparent,
-                    rgba(255, 255, 255, 0.2),
-                    transparent);
-            transition: left 0.5s ease;
+        .host {
+            background: #ffd700;
+            color: black;
+            border: 2px solid #b8860b;
         }
 
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-host {
-            background: linear-gradient(135deg, var(--color-danger-dark) 0%, var(--color-danger) 100%);
-            color: var(--color-white);
-        }
-
-        .btn-host:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: var(--shadow-2xl), var(--shadow-glow-red);
-        }
-
-        .btn-player {
-            background: linear-gradient(135deg, var(--color-success-dark) 0%, var(--color-success) 100%);
-            color: var(--color-white);
-        }
-
-        .btn-player:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: var(--shadow-2xl), var(--shadow-glow-green);
-        }
-
-        @media (max-width: 768px) {
-            .btn {
-                min-width: 280px;
-                padding: 18px 50px;
-                font-size: 1.2rem;
-            }
-
-            h1 {
-                margin-bottom: 50px;
-            }
+        .player {
+            background: #333;
+            color: white;
+            border: 2px solid #555;
         }
     </style>
 </head>
 
 <body>
-    <!-- Wood frame borders -->
-    <div class="wood-frame top"></div>
-    <div class="wood-frame bottom"></div>
-    <div class="wood-frame left"></div>
-    <div class="wood-frame right"></div>
+    <h1 style="color:#ffd700">POKER NIGHT OS</h1>
+    <p>Choose your device role:</p>
 
-    <div class="container">
-        <div class="logo">♠️♥️♦️♣️</div>
-        <h1>POKER</h1>
-
-        <div class="buttons">
-            <a href="host.html" class="btn btn-host">
-                <span>📺</span>
-                <span>OPEN HOST</span>
-            </a>
-            <a href="player.html" class="btn btn-player">
-                <span>📱</span>
-                <span>JOIN TABLE</span>
-            </a>
-        </div>
-    </div>
+    <a href="host.html" class="btn host">📺 OPEN HOST (iPad)</a>
+    <a href="player.html" class="btn player">📱 OPEN PLAYER (Phone)</a>
 </body>
 
 </html>
