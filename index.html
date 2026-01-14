@@ -2,49 +2,88 @@
 <html>
 
 <head>
-    <title>Poker Night Hub</title>
+    <title>Poker Night VIP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        
         body {
-            background: #111;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             color: white;
-            font-family: sans-serif;
+            font-family: 'Bebas Neue', sans-serif;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 80px;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 64px;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+        }
+
+        p {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 60px;
+            letter-spacing: 2px;
         }
 
         .btn {
             display: block;
             width: 80%;
-            max-width: 300px;
-            margin: 20px auto;
-            padding: 25px;
-            font-size: 20px;
+            max-width: 350px;
+            margin: 25px auto;
+            padding: 30px;
+            font-size: 24px;
             font-weight: bold;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 15px;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
         }
 
         .host {
-            background: #ffd700;
+            background: linear-gradient(145deg, #ffd700, #f39c12);
             color: black;
-            border: 2px solid #b8860b;
+            border: 3px solid #b8860b;
         }
 
         .player {
-            background: #333;
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
             color: white;
-            border: 2px solid #555;
+            border: 3px solid #1e8449;
+        }
+
+        .features {
+            margin-top: 60px;
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 
 <body>
-    <h1 style="color:#ffd700">POKER NIGHT OS</h1>
-    <p>Choose your device role:</p>
+    <h1>POKER NIGHT VIP</h1>
+    <p>ULTIMATE 3D EDITION</p>
 
-    <a href="host.html" class="btn host">📺 OPEN HOST (iPad)</a>
-    <a href="player.html" class="btn player">📱 OPEN PLAYER (Phone)</a>
+    <a href="host_ultimate.html" class="btn host">📺 OPEN HOST (iPad)</a>
+    <a href="player_ultimate.html" class="btn player">📱 OPEN PLAYER (Phone)</a>
+
+    <div class="features">
+        ✨ 3D Realistic Chips • 🔊 Sound Effects • 📊 Live Stats<br>
+        🎯 Haptic Feedback • 🎨 Premium Animations • 💎 VIP Experience
+    </div>
 </body>
 
 </html>
