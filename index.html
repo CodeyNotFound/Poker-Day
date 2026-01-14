@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Poker VIP: Ultimate Edition</title>
+    <title>Poker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,9 +18,8 @@
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: 
-                linear-gradient(135deg, #1a3a1a 0%, #0d1f0d 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f2b0f 0%, #1a4d1a 50%, #0f2b0f 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,7 +30,7 @@
             overflow: hidden;
         }
 
-        /* Felt texture overlay */
+        /* Felt texture */
         body::before {
             content: '';
             position: absolute;
@@ -33,167 +38,165 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
-                repeating-linear-gradient(
-                    0deg,
+            background:
+                repeating-linear-gradient(0deg,
                     transparent,
                     transparent 2px,
-                    rgba(0, 0, 0, 0.03) 2px,
-                    rgba(0, 0, 0, 0.03) 4px
-                ),
-                repeating-linear-gradient(
-                    90deg,
+                    rgba(0, 0, 0, 0.05) 2px,
+                    rgba(0, 0, 0, 0.05) 4px),
+                repeating-linear-gradient(90deg,
                     transparent,
                     transparent 2px,
-                    rgba(0, 0, 0, 0.03) 2px,
-                    rgba(0, 0, 0, 0.03) 4px
-                );
+                    rgba(0, 0, 0, 0.05) 2px,
+                    rgba(0, 0, 0, 0.05) 4px);
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
-        /* Wood border frame */
+        /* Wood border */
         .wood-frame {
             position: fixed;
             pointer-events: none;
+            z-index: 100;
         }
 
         .wood-frame.top,
         .wood-frame.bottom {
             left: 0;
             right: 0;
-            height: 40px;
-            background: 
-                linear-gradient(90deg, 
-                    #4a2f1a 0%, 
-                    #6b4423 25%, 
-                    #5a3a20 50%, 
-                    #6b4423 75%, 
-                    #4a2f1a 100%
-                );
-            box-shadow: 
-                inset 0 2px 4px rgba(255, 255, 255, 0.2),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.4),
-                0 4px 8px rgba(0, 0, 0, 0.6);
+            height: 35px;
+            background:
+                linear-gradient(90deg,
+                    #3d2817 0%,
+                    #5a3a20 20%,
+                    #6b4423 40%,
+                    #5a3a20 60%,
+                    #6b4423 80%,
+                    #3d2817 100%);
+            box-shadow:
+                inset 0 2px 6px rgba(255, 255, 255, 0.15),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.7);
         }
 
-        .wood-frame.top { top: 0; }
-        .wood-frame.bottom { bottom: 0; }
+        .wood-frame.top {
+            top: 0;
+        }
+
+        .wood-frame.bottom {
+            bottom: 0;
+        }
 
         .wood-frame.left,
         .wood-frame.right {
             top: 0;
             bottom: 0;
-            width: 40px;
-            background: 
-                linear-gradient(180deg, 
-                    #4a2f1a 0%, 
-                    #6b4423 25%, 
-                    #5a3a20 50%, 
-                    #6b4423 75%, 
-                    #4a2f1a 100%
-                );
-            box-shadow: 
-                inset 2px 0 4px rgba(255, 255, 255, 0.2),
-                inset -2px 0 4px rgba(0, 0, 0, 0.4),
-                4px 0 8px rgba(0, 0, 0, 0.6);
+            width: 35px;
+            background:
+                linear-gradient(180deg,
+                    #3d2817 0%,
+                    #5a3a20 20%,
+                    #6b4423 40%,
+                    #5a3a20 60%,
+                    #6b4423 80%,
+                    #3d2817 100%);
+            box-shadow:
+                inset 2px 0 6px rgba(255, 255, 255, 0.15),
+                inset -2px 0 6px rgba(0, 0, 0, 0.5),
+                4px 0 12px rgba(0, 0, 0, 0.7);
         }
 
-        .wood-frame.left { left: 0; }
-        .wood-frame.right { right: 0; }
+        .wood-frame.left {
+            left: 0;
+        }
+
+        .wood-frame.right {
+            right: 0;
+        }
 
         .container {
             text-align: center;
             z-index: 10;
-            max-width: 800px;
             padding: 60px 20px;
         }
 
         .logo {
-            margin-bottom: 20px;
-            font-size: 4rem;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 30px;
+            font-size: 5rem;
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+            animation: gentlePulse 3s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes gentlePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.03);
+                opacity: 1;
+            }
         }
 
         h1 {
-            font-size: clamp(2rem, 5vw, 4rem);
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4a0 50%, #d4af37 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            letter-spacing: 3px;
-            font-weight: bold;
+            letter-spacing: 0.05em;
             position: relative;
-        }
-
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #d4af37;
-            margin-bottom: 50px;
-            font-style: italic;
+            filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.6));
         }
 
         .buttons {
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            margin-bottom: 60px;
+            gap: 25px;
             align-items: center;
         }
 
         .btn {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
-            padding: 25px 60px;
-            font-size: 1.5rem;
-            font-weight: bold;
+            padding: 22px 70px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
             text-decoration: none;
-            border-radius: 15px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            border: 3px solid;
-            min-width: 350px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border: none;
+            min-width: 320px;
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            letter-spacing: 0.03em;
         }
 
         .btn::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent,
-                rgba(255, 255, 255, 0.1),
-                transparent
-            );
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
+            transition: left 0.5s ease;
         }
 
         .btn:hover::before {
@@ -201,126 +204,43 @@
         }
 
         .btn-host {
-            background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
-            border-color: #ff6b6b;
+            background: linear-gradient(135deg, #a31f1f 0%, #d32f2f 100%);
             color: #fff;
         }
 
         .btn-host:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 30px rgba(220, 20, 60, 0.6);
+            transform: translateY(-4px);
+            box-shadow:
+                0 15px 35px rgba(211, 47, 47, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .btn-player {
-            background: linear-gradient(135deg, #1a5f1a 0%, #2d8f2d 100%);
-            border-color: #5cb85c;
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
             color: #fff;
         }
 
         .btn-player:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 30px rgba(45, 143, 45, 0.6);
-        }
-
-        .features {
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .features h3 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-        }
-
-        .features ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .features li {
-            padding: 12px;
-            margin: 8px 0;
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 8px;
-            border-left: 4px solid #d4af37;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        .features li:hover {
-            background: rgba(212, 175, 55, 0.2);
-            transform: translateX(10px);
-        }
-
-        .features li::before {
-            content: '✦ ';
-            color: #ffd700;
-            margin-right: 10px;
-        }
-
-        /* Floating chips decoration */
-        .chip-decoration {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 5px solid;
-            animation: float 6s ease-in-out infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(180deg); }
-        }
-
-        .chip-1 {
-            top: 15%;
-            left: 10%;
-            background: #dc143c;
-            border-color: #8b0000;
-            animation-delay: 0s;
-        }
-
-        .chip-2 {
-            top: 70%;
-            right: 15%;
-            background: #1a5f1a;
-            border-color: #0d3d0d;
-            animation-delay: 2s;
-        }
-
-        .chip-3 {
-            bottom: 20%;
-            left: 15%;
-            background: #ffd700;
-            border-color: #b8860b;
-            animation-delay: 4s;
+            transform: translateY(-4px);
+            box-shadow:
+                0 15px 35px rgba(67, 160, 71, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         @media (max-width: 768px) {
             .btn {
                 min-width: 280px;
-                padding: 20px 40px;
+                padding: 18px 50px;
                 font-size: 1.2rem;
             }
 
-            .features {
-                padding: 20px;
-            }
-
-            .features li {
-                font-size: 1rem;
+            h1 {
+                margin-bottom: 50px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Wood frame borders -->
     <div class="wood-frame top"></div>
@@ -328,15 +248,9 @@
     <div class="wood-frame left"></div>
     <div class="wood-frame right"></div>
 
-    <!-- Floating chip decorations -->
-    <div class="chip-decoration chip-1"></div>
-    <div class="chip-decoration chip-2"></div>
-    <div class="chip-decoration chip-3"></div>
-
     <div class="container">
         <div class="logo">♠️♥️♦️♣️</div>
-        <h1>POKER VIP: ULTIMATE EDITION</h1>
-        <p class="subtitle">Experience Premium Multiplayer Poker</p>
+        <h1>POKER</h1>
 
         <div class="buttons">
             <a href="host.html" class="btn btn-host">
@@ -348,20 +262,7 @@
                 <span>JOIN TABLE</span>
             </a>
         </div>
-
-        <div class="features">
-            <h3>🎰 PREMIUM FEATURES 🎰</h3>
-            <ul>
-                <li>Turn-Based Multiplayer Action</li>
-                <li>Real-Time Firebase Synchronization</li>
-                <li>3D CSS Chip Animations</li>
-                <li>Haptic Feedback & Sound Effects</li>
-                <li>Premium Felt & Wood Textures</li>
-                <li>Mobile & Desktop Optimized</li>
-                <li>Advanced Dealer & Turn Management</li>
-                <li>Multi-Winner Pot Split System</li>
-            </ul>
-        </div>
     </div>
 </body>
+
 </html>
