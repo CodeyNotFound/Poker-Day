@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Poker VIP - Player</title>
+    <title>Poker - Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="chips.css">
     <style>
         * {
             margin: 0;
@@ -15,8 +21,8 @@
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(135deg, #1a3a1a 0%, #0d1f0d 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f2b0f 0%, #1a4d1a 50%, #0f2b0f 100%);
             min-height: 100vh;
             color: #f4e4c1;
             position: relative;
@@ -205,16 +211,20 @@
         }
 
         .player-name {
+            font-family: 'Playfair Display', serif;
             color: #ffd700;
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 15px;
-            font-weight: bold;
+            font-weight: 900;
+            letter-spacing: 0.02em;
         }
 
         .player-chips {
+            font-family: 'Inter', sans-serif;
             color: #5cb85c;
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .player-bet {
@@ -344,99 +354,19 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 100%);
             border-top: 3px solid #d4af37;
-            padding: 20px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            padding: 15px 10px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
             display: flex;
             justify-content: space-around;
-            gap: 10px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.9);
             z-index: 50;
         }
 
-        .chip {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 5px solid;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow:
-                0 6px 12px rgba(0, 0, 0, 0.6),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.4),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            position: relative;
-        }
 
-        .chip::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 45px;
-            height: 45px;
-            border: 2px dashed;
-            border-radius: 50%;
-            opacity: 0.5;
-        }
-
-        .chip:active {
-            transform: scale(0.9) translateY(-5px);
-        }
-
-        .chip-value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            z-index: 1;
-        }
-
-        .chip-1 {
-            background: radial-gradient(circle, #fff 0%, #e0e0e0 100%);
-            border-color: #999;
-        }
-
-        .chip-1::before {
-            border-color: #999;
-        }
-
-        .chip-1 .chip-value {
-            color: #333;
-        }
-
-        .chip-5 {
-            background: radial-gradient(circle, #ff6b6b 0%, #dc143c 100%);
-            border-color: #8b0000;
-        }
-
-        .chip-5::before {
-            border-color: #8b0000;
-        }
-
-        .chip-25 {
-            background: radial-gradient(circle, #5cb85c 0%, #2d8f2d 100%);
-            border-color: #1a5f1a;
-        }
-
-        .chip-25::before {
-            border-color: #1a5f1a;
-        }
-
-        .chip-100 {
-            background: radial-gradient(circle, #333 0%, #000 100%);
-            border-color: #ffd700;
-        }
-
-        .chip-100::before {
-            border-color: #ffd700;
-        }
 
         /* Flying Chip Animation */
         .flying-chip {
@@ -466,13 +396,14 @@
             }
         }
 
+        /* Responsive */
         @media (max-width: 400px) {
-            .chip {
+            .poker-chip {
                 width: 60px;
                 height: 60px;
             }
 
-            .chip-value {
+            .poker-chip .value {
                 font-size: 1.1rem;
             }
         }
@@ -533,17 +464,20 @@
 
         <!-- Chip Dock -->
         <div class="chip-dock">
-            <div class="chip chip-1" onclick="addChip(1)">
-                <div class="chip-value">$1</div>
+            <div class="poker-chip chip-5" onclick="addChip(5)">
+                <span class="value">5</span>
             </div>
-            <div class="chip chip-5" onclick="addChip(5)">
-                <div class="chip-value">$5</div>
+            <div class="poker-chip chip-10" onclick="addChip(10)">
+                <span class="value">10</span>
             </div>
-            <div class="chip chip-25" onclick="addChip(25)">
-                <div class="chip-value">$25</div>
+            <div class="poker-chip chip-20" onclick="addChip(20)">
+                <span class="value">20</span>
             </div>
-            <div class="chip chip-100" onclick="addChip(100)">
-                <div class="chip-value">$100</div>
+            <div class="poker-chip chip-50" onclick="addChip(50)">
+                <span class="value">50</span>
+            </div>
+            <div class="poker-chip chip-100" onclick="addChip(100)">
+                <span class="value">100</span>
             </div>
         </div>
     </div>
