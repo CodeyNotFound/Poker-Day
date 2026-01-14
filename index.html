@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/components.css">
     <style>
         * {
             margin: 0;
@@ -18,14 +20,14 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f2b0f 0%, #1a4d1a 50%, #0f2b0f 100%);
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--color-felt-dark) 0%, var(--color-felt-base) 50%, var(--color-felt-dark) 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #f4e4c1;
+            color: var(--color-text-primary);
             position: relative;
             overflow: hidden;
         }
@@ -142,17 +144,30 @@
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 900;
-            margin-bottom: 60px;
-            background: linear-gradient(135deg, #d4af37 0%, #f4e4a0 50%, #d4af37 100%);
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: var(--font-black);
+            margin-bottom: var(--space-16);
+            background: linear-gradient(135deg, var(--color-gold-base) 0%, var(--color-gold-light) 50%, var(--color-gold-base) 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             position: relative;
-            filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.6));
+            filter: drop-shadow(3px 5px 8px rgba(0, 0, 0, 0.7));
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .buttons {
@@ -166,23 +181,22 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            padding: 22px 70px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 600;
+            gap: var(--space-4);
+            padding: var(--space-6) var(--space-16);
+            font-family: var(--font-body);
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
             text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: var(--radius-xl);
+            transition: all var(--transition-base);
             cursor: pointer;
             border: none;
-            min-width: 320px;
-            box-shadow:
-                0 10px 25px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            min-width: 340px;
+            box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             position: relative;
             overflow: hidden;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .btn::before {
@@ -204,27 +218,23 @@
         }
 
         .btn-host {
-            background: linear-gradient(135deg, #a31f1f 0%, #d32f2f 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--color-danger-dark) 0%, var(--color-danger) 100%);
+            color: var(--color-white);
         }
 
         .btn-host:hover {
-            transform: translateY(-4px);
-            box-shadow:
-                0 15px 35px rgba(211, 47, 47, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-2xl), var(--shadow-glow-red);
         }
 
         .btn-player {
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--color-success-dark) 0%, var(--color-success) 100%);
+            color: var(--color-white);
         }
 
         .btn-player:hover {
-            transform: translateY(-4px);
-            box-shadow:
-                0 15px 35px rgba(67, 160, 71, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-2xl), var(--shadow-glow-green);
         }
 
         @media (max-width: 768px) {
