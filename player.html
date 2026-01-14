@@ -11,6 +11,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="chips.css">
     <style>
         * {
@@ -21,10 +23,10 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f2b0f 0%, #1a4d1a 50%, #0f2b0f 100%);
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--color-felt-dark) 0%, var(--color-felt-base) 50%, var(--color-felt-dark) 100%);
             min-height: 100vh;
-            color: #f4e4c1;
+            color: var(--color-text-primary);
             position: relative;
             overflow-x: hidden;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -46,7 +48,7 @@
                     rgba(0, 0, 0, 0.03) 4px);
             pointer-events: none;
             opacity: 0.5;
-            z-index: 0;
+            z-index: var(--z-below);
         }
 
         /* Setup Screen */
@@ -56,71 +58,35 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: var(--space-5);
             position: relative;
-            z-index: 10;
+            z-index: var(--z-raised);
         }
 
         .setup-card {
-            background: rgba(0, 0, 0, 0.85);
-            border: 3px solid #d4af37;
-            border-radius: 20px;
-            padding: 40px 30px;
             max-width: 450px;
             width: 100%;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
         }
 
         .setup-card h2 {
-            color: #ffd700;
+            color: var(--color-gold-base);
             text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
+            margin-bottom: var(--space-6);
+            font-size: var(--text-3xl);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: var(--space-5);
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #d4af37;
-            font-weight: bold;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #d4af37;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #f4e4c1;
-            font-size: 1.1rem;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-
-        .btn-join {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #1a5f1a 0%, #2d8f2d 100%);
-            border: 2px solid #5cb85c;
-            border-radius: 10px;
-            color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-join:active {
-            transform: scale(0.95);
+            margin-bottom: var(--space-2);
+            color: var(--color-gold-light);
+            font-weight: var(--font-semibold);
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         /* Game Screen */
@@ -128,7 +94,7 @@
             display: none;
             min-height: 100vh;
             position: relative;
-            z-index: 10;
+            z-index: var(--z-raised);
             padding-bottom: 220px;
         }
 
@@ -148,41 +114,251 @@
             }
         }
 
+        /* Player Info */
+        .player-info {
+            margin: var(--space-5);
+        }
+
+        .player-name {
+            font-family: var(--font-display);
+            color: var(--color-gold-base);
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-3);
+            font-weight: var(--font-black);
+            letter-spacing: 0.02em;
+            text-align: center;
+        }
+
+        .player-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-6);
+            margin-bottom: var(--space-3);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: var(--text-xs);
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+        }
+
+        .stat-value.chips {
+            color: var(--color-success);
+        }
+
+        .stat-value.bet {
+            color: var(--color-danger);
+        }
+
+        /* Staging Area */
+        .staging-area {
+            margin: var(--space-5);
+        }
+
+        .staging-header {
+            text-align: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .staging-label {
+            color: var(--color-gold-light);
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-2);
+        }
+
+        .staged-amount {
+            color: var(--color-gold-base);
+            font-size: var(--text-5xl);
+            font-weight: var(--font-black);
+            text-shadow: 0 0 15px var(--color-gold-glow);
+        }
+
+        .staged-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+            justify-content: center;
+            min-height: 80px;
+            padding: var(--space-4);
+        }
+
+        .staged-chip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 4px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-bold);
+            font-size: var(--text-base);
+            color: var(--color-white);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            box-shadow: var(--shadow-md);
+            animation: chipAppear var(--transition-bounce);
+        }
+
+        @keyframes chipAppear {
+            from {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
+        }
+
+        /* Action Container */
+        .action-container {
+            padding: var(--space-5);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 90%;
+            max-width: 400px;
+            padding: var(--space-6);
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            border: none;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width var(--transition-slow), height var(--transition-slow);
+        }
+
+        .action-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-btn.btn-check {
+            background: linear-gradient(135deg, var(--color-info-dark) 0%, var(--color-info) 100%);
+            color: white;
+            box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn.btn-call {
+            background: linear-gradient(135deg, var(--color-warning-dark) 0%, var(--color-warning) 100%);
+            color: var(--color-gray-900);
+            box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn.btn-raise {
+            background: linear-gradient(135deg, var(--color-danger-dark) 0%, var(--color-danger) 100%);
+            color: white;
+            box-shadow: var(--shadow-lg), var(--shadow-glow-red);
+        }
+
+        .btn-fold {
+            background: linear-gradient(135deg, var(--color-gray-700) 0%, var(--color-gray-600) 100%);
+            color: white;
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, var(--color-gray-600) 0%, var(--color-gray-500) 100%);
+            color: white;
+            padding: var(--space-4);
+            font-size: var(--text-lg);
+        }
+
+        /* Chip Dock */
+        .chip-dock {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-top: 1px solid var(--glass-border);
+            padding: var(--space-4) var(--space-2);
+            padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: var(--space-2);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            z-index: var(--z-overlay);
+        }
+
+        .poker-chip {
+            transition: all var(--transition-base);
+        }
+
+        .poker-chip:active {
+            transform: scale(0.9);
+        }
+
         /* Waiting Overlay */
         .waiting-overlay {
             display: none;
+        }
+
+        .waiting-overlay.active {
+            display: flex;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 100;
+            backdrop-filter: blur(8px);
+            z-index: var(--z-modal);
             align-items: center;
             justify-content: center;
             flex-direction: column;
         }
 
-        .waiting-overlay.active {
-            display: flex;
-        }
-
         .waiting-message {
             text-align: center;
-            padding: 20px;
+            padding: var(--space-5);
         }
 
         .waiting-message h2 {
-            color: #ffd700;
-            font-size: 2rem;
-            margin-bottom: 20px;
+            color: var(--color-gold-base);
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-5);
         }
 
         .waiting-player {
-            color: #5cb85c;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(92, 184, 92, 0.8);
+            color: var(--color-success);
+            font-size: var(--text-5xl);
+            font-weight: var(--font-black);
+            text-shadow: 0 0 20px var(--color-success-glow);
             animation: pulse 1.5s ease-in-out infinite;
         }
 
@@ -200,203 +376,6 @@
             }
         }
 
-        /* Player Info */
-        .player-info {
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid #d4af37;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px;
-            text-align: center;
-        }
-
-        .player-name {
-            font-family: 'Playfair Display', serif;
-            color: #ffd700;
-            font-size: 2rem;
-            margin-bottom: 15px;
-            font-weight: 900;
-            letter-spacing: 0.02em;
-        }
-
-        .player-chips {
-            font-family: 'Inter', sans-serif;
-            color: #5cb85c;
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .player-bet {
-            color: #ff6b6b;
-            font-size: 1.3rem;
-        }
-
-        /* Staging Area */
-        .staging-area {
-            background: rgba(0, 0, 0, 0.7);
-            border: 3px solid #ffd700;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px;
-            text-align: center;
-            min-height: 120px;
-        }
-
-        .staging-area h3 {
-            color: #d4af37;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .staged-amount {
-            color: #ffd700;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        }
-
-        .staged-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .staged-chip {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 4px solid;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-            animation: chipAppear 0.3s ease-out;
-        }
-
-        @keyframes chipAppear {
-            from {
-                transform: scale(0) rotate(0deg);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1) rotate(360deg);
-                opacity: 1;
-            }
-        }
-
-        /* Action Button */
-        .action-container {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .action-btn {
-            width: 90%;
-            max-width: 400px;
-            padding: 25px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            border: 4px solid;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-            margin-bottom: 15px;
-        }
-
-        .action-btn:active {
-            transform: scale(0.95);
-        }
-
-        .action-btn.btn-check {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            border-color: #5dade2;
-            color: white;
-        }
-
-        .action-btn.btn-call {
-            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
-            border-color: #ffd700;
-            color: #000;
-        }
-
-        .action-btn.btn-raise {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            border-color: #ff6b6b;
-            color: white;
-        }
-
-        .btn-fold {
-            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-            border-color: #7f8c8d;
-            color: white;
-        }
-
-        .btn-clear {
-            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-            border-color: #bdc3c7;
-            color: white;
-            padding: 15px;
-            font-size: 1.2rem;
-        }
-
-        /* Chip Dock */
-        .chip-dock {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 100%);
-            border-top: 3px solid #d4af37;
-            padding: 15px 10px;
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.9);
-            z-index: 50;
-        }
-
-
-
-        /* Flying Chip Animation */
-        .flying-chip {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 5px solid;
-            pointer-events: none;
-            z-index: 200;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-        }
-
-        @keyframes flyToPot {
-            0% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: 1;
-            }
-
-            50% {
-                transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(180deg);
-            }
-
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(0) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Responsive */
         @media (max-width: 400px) {
             .poker-chip {
                 width: 60px;
@@ -413,21 +392,21 @@
 <body>
     <!-- Setup Screen -->
     <div id="setup-screen">
-        <div class="setup-card">
-            <h2>📱 JOIN TABLE 📱</h2>
+        <div class="glass-card setup-card">
+            <h2>📱 JOIN TABLE</h2>
             <div class="form-group">
                 <label for="room-code">Room Code</label>
-                <input type="text" id="room-code" placeholder="Enter room code" required>
+                <input type="text" id="room-code" class="input" placeholder="Enter room code" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter password" required>
+                <input type="password" id="password" class="input" placeholder="Enter password" required>
             </div>
             <div class="form-group">
                 <label for="player-name">Your Name</label>
-                <input type="text" id="player-name" placeholder="Enter your name" required>
+                <input type="text" id="player-name" class="input" placeholder="Enter your name" required>
             </div>
-            <button class="btn-join" onclick="joinGame()">JOIN GAME</button>
+            <button class="btn btn--primary btn--lg" onclick="joinGame()">JOIN GAME</button>
         </div>
     </div>
 
@@ -436,22 +415,32 @@
         <!-- Waiting Overlay -->
         <div class="waiting-overlay" id="waiting-overlay">
             <div class="waiting-message">
-                <h2>⏳ WAITING FOR ⏳</h2>
+                <h2>⏳ WAITING FOR</h2>
                 <div class="waiting-player" id="waiting-player-name">...</div>
             </div>
         </div>
 
         <!-- Player Info -->
-        <div class="player-info">
+        <div class="player-info glass-card">
             <div class="player-name" id="my-name">Player</div>
-            <div class="player-chips">💵 $<span id="my-chips">1000</span></div>
-            <div class="player-bet">Current Bet: $<span id="my-bet">0</span></div>
+            <div class="player-stats">
+                <div class="stat">
+                    <div class="stat-label">Chips</div>
+                    <div class="stat-value chips">💵 $<span id="my-chips">1000</span></div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Current Bet</div>
+                    <div class="stat-value bet">$<span id="my-bet">0</span></div>
+                </div>
+            </div>
         </div>
 
         <!-- Staging Area -->
-        <div class="staging-area">
-            <h3>💰 STAGING AREA 💰</h3>
-            <div class="staged-amount">$<span id="staged-value">0</span></div>
+        <div class="staging-area glass-card">
+            <div class="staging-header">
+                <div class="staging-label">💰 Staging Area</div>
+                <div class="staged-amount">$<span id="staged-value">0</span></div>
+            </div>
             <div class="staged-chips" id="staged-chips"></div>
         </div>
 
@@ -588,7 +577,6 @@
             onValue(ref(db, `rooms/${roomCode}/players/${playerName}`), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) {
-                    // Player was kicked
                     alert('You have been removed from the game');
                     location.reload();
                     return;
@@ -621,7 +609,6 @@
             const newIsMyTurn = currentPlayer === myName && !myData?.folded;
 
             if (newIsMyTurn && !isMyTurn) {
-                // Turn just became mine
                 playTurnNotification();
                 if (navigator.vibrate) {
                     navigator.vibrate([200, 100, 200]);
@@ -703,18 +690,20 @@
         };
 
         function getChipColor(value) {
-            if (value === 1) return 'radial-gradient(circle, #fff 0%, #e0e0e0 100%)';
-            if (value === 5) return 'radial-gradient(circle, #ff6b6b 0%, #dc143c 100%)';
-            if (value === 25) return 'radial-gradient(circle, #5cb85c 0%, #2d8f2d 100%)';
-            if (value === 100) return 'radial-gradient(circle, #333 0%, #000 100%)';
+            if (value === 5) return 'radial-gradient(circle, #ffffff 0%, #e8e8e8 100%)';
+            if (value === 10) return 'radial-gradient(circle, #b33a3a 0%, #7a1f1f 100%)';
+            if (value === 20) return 'radial-gradient(circle, #4a7c4a 0%, #2d5a2d 100%)';
+            if (value === 50) return 'radial-gradient(circle, #4a6b8a 0%, #2d4a6b 100%)';
+            if (value === 100) return 'radial-gradient(circle, #3a3a3a 0%, #0a0a0a 100%)';
             return '#fff';
         }
 
         function getChipBorderColor(value) {
-            if (value === 1) return '#999';
-            if (value === 5) return '#8b0000';
-            if (value === 25) return '#1a5f1a';
-            if (value === 100) return '#ffd700';
+            if (value === 5) return '#c0c0c0';
+            if (value === 10) return '#8b2020';
+            if (value === 20) return '#356535';
+            if (value === 50) return '#355575';
+            if (value === 100) return '#d4af37';
             return '#000';
         }
 
@@ -730,9 +719,6 @@
 
             const newBet = (myData?.currentBet || 0) + stagedAmount;
             const newChips = (myData?.chips || 0) - stagedAmount;
-
-            // Animate flying chip
-            animateFlyingChip();
 
             // Update player data
             await update(ref(db, `rooms/${currentRoom}/players/${myName}`), {
@@ -787,29 +773,6 @@
             await update(ref(db, `rooms/${currentRoom}`), {
                 turnIndex: nextIndex
             });
-        }
-
-        function animateFlyingChip() {
-            const chip = document.createElement('div');
-            chip.className = 'flying-chip';
-            chip.style.background = getChipColor(25);
-            chip.style.borderColor = getChipBorderColor(25);
-            chip.style.left = '50%';
-            chip.style.bottom = '100px';
-            chip.style.setProperty('--tx', '0px');
-            chip.style.setProperty('--ty', '-500px');
-            chip.style.animation = 'flyToPot 1s ease-out forwards';
-
-            document.body.appendChild(chip);
-
-            setTimeout(() => {
-                chip.remove();
-            }, 1000);
-
-            playSound(700, 0.2);
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
         }
     </script>
 </body>
